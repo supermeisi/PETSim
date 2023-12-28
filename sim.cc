@@ -8,6 +8,7 @@
 #include "G4UIExecutive.hh"
 
 #include "construction.hh"
+#include "physics.hh"
 
 int main(int argc, char** argv)
 {
@@ -18,6 +19,9 @@ int main(int argc, char** argv)
     #else
       G4RunManager* runManager = new G4RunManager;
     #endif
+
+    runManager->SetUserInitialization(new MyDetectorConstruction());
+    runManager->SetUserInitialization(new MyPhysicsList());
 
     if (argc == 1)
     {

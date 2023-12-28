@@ -6,10 +6,11 @@ find_package(Geant4 REQUIRED ui_all vis_all)
 
 include(${Geant4_USE_FILE})
 
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.hh)
+include_directories(${PROJECT_SOURCE_DIR}/inc)
 
-add_executable(sim sim.cc ${sources} ${headers})
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
+
+add_executable(sim sim.cc ${sources})
 target_link_libraries(sim ${Geant4_LIBRARIES})
 
 file(GLOB MACRO_FILES

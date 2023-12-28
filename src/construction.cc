@@ -2,6 +2,9 @@
 
 MyDetectorConstruction::MyDetectorConstruction()
 {
+    xWorld = 0.5 * m;
+    yWorld = 0.5 * m;
+    zWorld = 0.5 * m;
 }
 
 MyDetectorConstruction::~MyDetectorConstruction()
