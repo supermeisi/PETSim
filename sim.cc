@@ -7,6 +7,8 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 
+#include "construction.hh"
+
 int main(int argc, char** argv)
 {
     G4UIExecutive* ui = 0;
