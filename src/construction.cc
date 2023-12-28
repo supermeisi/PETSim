@@ -5,6 +5,8 @@ MyDetectorConstruction::MyDetectorConstruction()
     xWorld = 0.5 * m;
     yWorld = 0.5 * m;
     zWorld = 0.5 * m;
+
+    DefineMaterials();
 }
 
 MyDetectorConstruction::~MyDetectorConstruction()
@@ -13,6 +15,9 @@ MyDetectorConstruction::~MyDetectorConstruction()
 
 void MyDetectorConstruction::DefineMaterials()
 {
+    G4NistManager *nist = G4NistManager::Instance();
+
+    worldMat = nist->FindOrBuildMaterial("G4_AIR");
 }
 
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
