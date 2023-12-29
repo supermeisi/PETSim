@@ -38,12 +38,12 @@ void reco()
         
         TVector3 LOR = (pos - oldPos).Unit();
         
-        cout << "LOR: " << flush;
-        LOR.Print();
+        //cout << "LOR: " << flush;
+        //LOR.Print();
         
         Double_t timeDifference = globalTime - oldGlobalTime;
         
-        cout << "Time difference: " << timeDifference << endl;
+        //cout << "Time difference: " << timeDifference << endl;
         
         Double_t dist = 0.5 * (timeDifference * 299.792458);
         
@@ -51,8 +51,8 @@ void reco()
         
         hPos->Fill(annihilationPoint.X(), annihilationPoint.Z());
         
-        cout << "Annihilation Point: " << flush;
-        annihilationPoint.Print();
+        //cout << "Annihilation Point: " << flush;
+        //annihilationPoint.Print();
         //cout << globalTime - oldGlobalTime << endl;
         //midPoint.Print();
         

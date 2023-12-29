@@ -75,7 +75,7 @@ void MyDetectorConstruction::DefineMaterials()
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
     const G4double pi = 3.14159265358979323846;
-    const G4bool checkOverlaps = true;
+    const G4bool checkOverlaps = false;
 
     G4double bodyRadius = 15.0 * cm;
     G4double bodyLength = 170.0 * cm;

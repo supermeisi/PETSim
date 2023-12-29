@@ -11,6 +11,10 @@ MySensitiveDetector::~MySensitiveDetector()
 G4bool MySensitiveDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist)
 {
     G4Track *track = aStep->GetTrack();
+    
+    const G4ParticleDefinition *particle = track->GetParticleDefinition();
+
+    G4int pdg = particle->GetPDGEncoding();
 
     track->SetTrackStatus(fStopAndKill);
 
@@ -45,6 +49,7 @@ G4bool MySensitiveDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *ROhis
     man->FillNtupleDColumn(0, 3, posPhoton[2]);
     man->FillNtupleDColumn(0, 4, wlen);
     man->FillNtupleDColumn(0, 5, globalTime);
+    man->FillNtupleDColumn(0, 6, pdg);
     man->AddNtupleRow(0);
 
     man->FillNtupleIColumn(1, 0, evt);
