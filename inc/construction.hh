@@ -5,11 +5,13 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
+#include "G4Tubs.hh"
 #include "G4PVPlacement.hh"
 #include "G4NistManager.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4OpticalSurface.hh"
 #include "G4Element.hh"
+#include "G4VisAttributes.hh"
 
 #include "detector.hh"
 
@@ -25,14 +27,17 @@ private:
     G4Box *solidWorld;
     G4Box *solidScintillator;
     G4Box *solidDetector;
+    G4Tubs *solidBody;
 
     G4LogicalVolume *logicWorld;
     G4LogicalVolume *logicScintillator;
     G4LogicalVolume *logicDetector;
+    G4LogicalVolume *logicBody;
 
     G4VPhysicalVolume *physWorld;
     G4VPhysicalVolume *physScintillator;
     G4VPhysicalVolume *physDetector;
+    G4VPhysicalVolume *physBody;
     
     G4OpticalSurface *mirrorSurface;
     
@@ -54,6 +59,7 @@ private:
 
     G4Material *worldMat;
     G4Material *NaI;
+    G4Material *softTissue;
 
     G4Element *Na;
     G4Element *I;

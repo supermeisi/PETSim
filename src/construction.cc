@@ -4,7 +4,7 @@ MyDetectorConstruction::MyDetectorConstruction()
 {
     xWorld = 50. * cm;
     yWorld = 50. * cm;
-    zWorld = 50. * cm;
+    zWorld = 200. * cm;
 
     length = 20. * cm;
 
@@ -67,21 +67,36 @@ void MyDetectorConstruction::DefineMaterials()
     G4MaterialPropertiesTable *mptMirror = new G4MaterialPropertiesTable();
     mptMirror->AddProperty("REFLECTIVITY", energy, reflectivity, 2);
 
+    softTissue = nist->FindOrBuildMaterial("G4_TISSUE_SOFT_ICRP");
+
     mirrorSurface->SetMaterialPropertiesTable(mptMirror);
 }
 
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
     const G4double pi = 3.14159265358979323846;
-
     const G4bool checkOverlaps = true;
+
+    G4double bodyRadius = 15.0 * cm;
+    G4double bodyLength = 170.0 * cm;
 
     solidWorld = new G4Box("solidWorld", xWorld, yWorld, zWorld);
     logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicWorld");
-    physWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physWorld", 0, false, 0, true);
+    physWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physWorld", 0, false, 0, checkOverlaps);
+
+    // Creating be body
+    solidBody = new G4Tubs("solidBody", 0, bodyRadius, bodyLength / 2, 0., 2 * pi);
+    logicBody = new G4LogicalVolume(solidBody, softTissue, "logicBody");
+    physBody = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicBody, "physBody", logicWorld, false, 0, checkOverlaps);
+
+    G4VisAttributes* bodyVisAtt = new G4VisAttributes(G4Colour(1.0, 0.0, 0.0)); // Red for body
+    logicBody->SetVisAttributes(bodyVisAtt);
 
     solidScintillator = new G4Box("solidScintillator", xCryst, yCryst, zCryst);
     logicScintillator = new G4LogicalVolume(solidScintillator, NaI, "logicalScintillator");
+    
+    G4VisAttributes* scintVisAtt = new G4VisAttributes(G4Colour(0.0, 1.0, 0.0));
+    logicScintillator->SetVisAttributes(scintVisAtt);
 
     G4LogicalSkinSurface *skin = new G4LogicalSkinSurface("skin", logicWorld, mirrorSurface);
 
@@ -95,6 +110,10 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
     solidDetector = new G4Box("solidDetector", xDet, yDet, zDet);
     logicDetector = new G4LogicalVolume(solidDetector, worldMat, "logicDetector");
+    
+    G4VisAttributes* detVisAtt = new G4VisAttributes(G4Colour(0.0, 0.0, 1.0));
+    logicDetector->SetVisAttributes(detVisAtt);
+    
     for (G4int i = 0; i < nCrystL; i++)
     {
         for (G4int j = 0; j < nCrystR; j++)
