@@ -14,6 +14,10 @@ MyDetectorConstruction::MyDetectorConstruction()
     yCryst = 6 * mm;
     zCryst = 6 * mm;
 
+    xDet = 1. * mm;
+    yDet = yCryst;
+    zDet = zCryst;
+
     gap = 1. * mm;
 
     DefineMaterials();
@@ -89,22 +93,24 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     G4cout << "Number of crystals in radius: " << nCrystR << G4endl;
     G4cout << "Angle distance: " << dAngle << G4endl;
 
-    solidDetector = new G4Box("solidDetector", xCryst, yCryst, zCryst);
+    solidDetector = new G4Box("solidDetector", xDet, yDet, zDet);
     logicDetector = new G4LogicalVolume(solidDetector, worldMat, "logicDetector");
     for (G4int i = 0; i < nCrystL; i++)
     {
         for (G4int j = 0; j < nCrystR; j++)
         {
+            G4ThreeVector trans = G4ThreeVector(radius, 0., 2 * (-nCrystL / 2 + i) * (zCryst + gap));
+
             G4Rotate3D rotZ(j * dAngle * deg, G4ThreeVector(0, 0, 1));
-            G4Translate3D transScint(G4ThreeVector(radius, 0., 2 * i * (zCryst + gap)));
+            G4Translate3D transScint(trans);
             G4Transform3D transformScint = (rotZ) * (transScint);
 
             physScintillator = new G4PVPlacement(transformScint, logicScintillator, "physScintillator", logicWorld, false, i * 16 + j, checkOverlaps);
 
-            G4Translate3D transDet(G4ThreeVector(0., 0., 0.));
+            G4Translate3D transDet(trans + G4ThreeVector(xCryst + xDet, 0., 0.));
             G4Transform3D transformDet = (rotZ) * (transDet);
 
-            // physDetector = new G4PVPlacement(transformDet, logicDetector, "physDetector", logicWorld, false, i * 16 + j, checkOverlaps);
+            physDetector = new G4PVPlacement(transformDet, logicDetector, "physDetector", logicWorld, false, i * 16 + j, checkOverlaps);
         }
     }
 

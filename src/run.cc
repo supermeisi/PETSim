@@ -10,6 +10,7 @@ MyRunAction::MyRunAction()
     man->CreateNtupleDColumn("fY");
     man->CreateNtupleDColumn("fZ");
     man->CreateNtupleDColumn("fWlen");
+    man->CreateNtupleDColumn("fGlobalTime");
     man->FinishNtuple(0);
 
     man->CreateNtuple("Hits", "Hits");
@@ -17,6 +18,7 @@ MyRunAction::MyRunAction()
     man->CreateNtupleDColumn("fX");
     man->CreateNtupleDColumn("fY");
     man->CreateNtupleDColumn("fZ");
+    man->CreateNtupleDColumn("fGlobalTime");
     man->FinishNtuple(1);
 }
 

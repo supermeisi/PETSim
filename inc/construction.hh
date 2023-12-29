@@ -43,9 +43,14 @@ private:
     G4double length;
     G4double gap;
     G4double radius;
+
     G4double xCryst;
     G4double yCryst;
     G4double zCryst;
+
+    G4double xDet;
+    G4double yDet;
+    G4double zDet;
 
     G4Material *worldMat;
     G4Material *NaI;
