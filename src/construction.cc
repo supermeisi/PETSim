@@ -2,9 +2,19 @@
 
 MyDetectorConstruction::MyDetectorConstruction()
 {
-    xWorld = 0.5 * m;
-    yWorld = 0.5 * m;
-    zWorld = 0.5 * m;
+    xWorld = 50. * cm;
+    yWorld = 50. * cm;
+    zWorld = 50. * cm;
+
+    length = 20. * cm;
+
+    radius = 40 * cm;
+
+    xCryst = 6 * mm;
+    yCryst = 6 * mm;
+    zCryst = 6 * mm;
+
+    gap = 1. * mm;
 
     DefineMaterials();
 }
@@ -40,7 +50,7 @@ void MyDetectorConstruction::DefineMaterials()
 
     G4MaterialPropertiesTable *mptNaI = new G4MaterialPropertiesTable();
     mptNaI->AddProperty("RINDEX", energy, rindexNaI, 2);
-    mptNaI->AddConstProperty("SCINTILLATIONYIELD", 38. / keV);
+    mptNaI->AddConstProperty("SCINTILLATIONYIELD", 55. / keV);
     mptNaI->AddConstProperty("RESOLUTIONSCALE", 1.0);
     NaI->SetMaterialPropertiesTable(mptNaI);
 
@@ -58,31 +68,43 @@ void MyDetectorConstruction::DefineMaterials()
 
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
+    const G4double pi = 3.14159265358979323846;
+
+    const G4bool checkOverlaps = true;
+
     solidWorld = new G4Box("solidWorld", xWorld, yWorld, zWorld);
     logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicWorld");
     physWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physWorld", 0, false, 0, true);
 
-    solidScintillator = new G4Box("solidScintillator", 5 * cm, 5 * cm, 6 * cm);
+    solidScintillator = new G4Box("solidScintillator", xCryst, yCryst, zCryst);
     logicScintillator = new G4LogicalVolume(solidScintillator, NaI, "logicalScintillator");
 
     G4LogicalSkinSurface *skin = new G4LogicalSkinSurface("skin", logicWorld, mirrorSurface);
 
-    solidDetector = new G4Box("solidDetector", 1. * cm, 5. * cm, 6 * cm);
+    G4int nCrystR = (pi * radius) / (yCryst + gap);
+    G4double dAngle = 360. / nCrystR;
+
+    G4int nCrystL = length / (zCryst + gap);
+
+    G4cout << "Number of crystals in radius: " << nCrystR << G4endl;
+    G4cout << "Angle distance: " << dAngle << G4endl;
+
+    solidDetector = new G4Box("solidDetector", xCryst, yCryst, zCryst);
     logicDetector = new G4LogicalVolume(solidDetector, worldMat, "logicDetector");
-    for (G4int i = 0; i < 6; i++)
+    for (G4int i = 0; i < nCrystL; i++)
     {
-        for (G4int j = 0; j < 16; j++)
+        for (G4int j = 0; j < nCrystR; j++)
         {
-            G4Rotate3D rotZ(j * 22.5 * deg, G4ThreeVector(0, 0, 1));
-            G4Translate3D transXScint(G4ThreeVector(5. / tan(22.5 / 2 * deg) * cm + 5. * cm, 0. * cm, -40. * cm + i * 15 * cm));
-            G4Transform3D transformScint = (rotZ) * (transXScint);
+            G4Rotate3D rotZ(j * dAngle * deg, G4ThreeVector(0, 0, 1));
+            G4Translate3D transScint(G4ThreeVector(radius, 0., 2 * i * (zCryst + gap)));
+            G4Transform3D transformScint = (rotZ) * (transScint);
 
-            G4Translate3D transXDet(G4ThreeVector(5. / tan(22.5 / 2 * deg) * cm + 5. * cm + 6. * cm, 0. * cm, -40. * cm + i * 15 * cm));
-            G4Transform3D transformDet = (rotZ) * (transXDet);
+            physScintillator = new G4PVPlacement(transformScint, logicScintillator, "physScintillator", logicWorld, false, i * 16 + j, checkOverlaps);
 
-            physScintillator = new G4PVPlacement(transformScint, logicScintillator, "physScintillator", logicWorld, false, i * 16 + j, true);
+            G4Translate3D transDet(G4ThreeVector(0., 0., 0.));
+            G4Transform3D transformDet = (rotZ) * (transDet);
 
-            physDetector = new G4PVPlacement(transformDet, logicDetector, "physDetector", logicWorld, false, i * 16 + j, true);
+            // physDetector = new G4PVPlacement(transformDet, logicDetector, "physDetector", logicWorld, false, i * 16 + j, checkOverlaps);
         }
     }
 
