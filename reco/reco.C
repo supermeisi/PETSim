@@ -1,8 +1,10 @@
 void reco()
 {
+    const Int_t nCores = 8;
+    
     TChain *fHits = new TChain("Hits");
     
-    for(Int_t i = 0; i < 2; i++)
+    for(Int_t i = 0; i < nCores; i++)
     {
         fHits->AddFile(Form("../build/output0_t%d.root", i));
     }
