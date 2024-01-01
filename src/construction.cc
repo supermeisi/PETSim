@@ -10,9 +10,9 @@ MyDetectorConstruction::MyDetectorConstruction()
 
     radius = 40 * cm;
 
-    xCryst = 6 * mm;
-    yCryst = 6 * mm;
-    zCryst = 6 * mm;
+    xCryst = 10 * mm;
+    yCryst = 10 * mm;
+    zCryst = 10 * mm;
 
     xDet = 1. * mm;
     yDet = yCryst;
