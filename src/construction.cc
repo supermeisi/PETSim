@@ -2,9 +2,9 @@
 
 MyDetectorConstruction::MyDetectorConstruction()
 {
-    xWorld = 50. * cm;
-    yWorld = 50. * cm;
-    zWorld = 200. * cm;
+    xWorld = 250. * cm;
+    yWorld = 250. * cm;
+    zWorld = 250. * cm;
 
     length = 20. * cm;
 
@@ -19,6 +19,12 @@ MyDetectorConstruction::MyDetectorConstruction()
     zDet = zCryst;
 
     gap = 1. * mm;
+    
+    nDosiX = 10;
+    nDosiY = 10;
+    nDosiZ = 10;
+    
+    rDosi = 5 * cm;
 
     DefineMaterials();
 }
@@ -70,6 +76,8 @@ void MyDetectorConstruction::DefineMaterials()
     softTissue = nist->FindOrBuildMaterial("G4_TISSUE_SOFT_ICRP");
 
     mirrorSurface->SetMaterialPropertiesTable(mptMirror);
+    
+    dosiMat = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
 }
 
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
@@ -84,14 +92,15 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicWorld");
     physWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physWorld", 0, false, 0, checkOverlaps);
 
-    // Creating be body
-    solidBody = new G4Tubs("solidBody", 0, bodyRadius, bodyLength / 2, 0., 2 * pi);
+    // Creating the phantom body
+    solidBody = new G4Tubs("solidBody", 0, bodyRadius, 0.5 * bodyLength / 2, 0., 2 * pi);
     logicBody = new G4LogicalVolume(solidBody, softTissue, "logicBody");
     physBody = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicBody, "physBody", logicWorld, false, 0, checkOverlaps);
 
     G4VisAttributes* bodyVisAtt = new G4VisAttributes(G4Colour(1.0, 0.0, 0.0)); // Red for body
     logicBody->SetVisAttributes(bodyVisAtt);
-
+    
+    // Creating the scintillators and detectors
     solidScintillator = new G4Box("solidScintillator", xCryst, yCryst, zCryst);
     logicScintillator = new G4LogicalVolume(solidScintillator, NaI, "logicalScintillator");
     
@@ -130,6 +139,32 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
             G4Transform3D transformDet = (rotZ) * (transDet);
 
             physDetector = new G4PVPlacement(transformDet, logicDetector, "physDetector", logicWorld, false, i * 16 + j, checkOverlaps);
+        }
+    }
+    
+    // Creating the dosimeters
+    solidDosi = new G4Sphere("solidDosi", 0 * cm, rDosi, 0 * deg, 360 * deg, 0 * deg, 180 * deg);
+    logicDosi = new G4LogicalVolume(solidDosi, dosiMat, "logicDosi");
+    
+    G4double dDosiX = 2 * xWorld / nDosiX;
+    G4double dDosiY = 2 * yWorld / nDosiY;
+    G4double dDosiZ = 2 * zWorld / nDosiZ;
+    
+    for (G4int i = 0; i < nDosiX; i++)
+    {
+        for (G4int j = 0; j < nDosiY; j++)
+        {
+            for (G4int k = 0; k < nDosiZ; k++)
+            {                
+                G4double posX = -xWorld + i * dDosiX;
+                G4double posY = -yWorld + j * dDosiY;
+                G4double posZ = -zWorld + k * dDosiZ;
+                
+                if(sqrt(pow(posX, 2) + pow(posY, 2) < radius) && fabs(posZ) < 0.5 * bodyLength)
+                    continue;
+            
+                physDosi = new G4PVPlacement(0, G4ThreeVector(posX, posY, posZ), logicDosi, "physDosi", logicWorld, false, 0, checkOverlaps);
+            }
         }
     }
 

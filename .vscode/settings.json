@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.icc": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "reco.C": "cpp"
     }
 }

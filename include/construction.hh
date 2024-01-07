@@ -6,6 +6,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4Sphere.hh"
 #include "G4PVPlacement.hh"
 #include "G4NistManager.hh"
 #include "G4LogicalSkinSurface.hh"
@@ -28,16 +29,19 @@ private:
     G4Box *solidScintillator;
     G4Box *solidDetector;
     G4Tubs *solidBody;
+    G4Sphere *solidDosi;
 
     G4LogicalVolume *logicWorld;
     G4LogicalVolume *logicScintillator;
     G4LogicalVolume *logicDetector;
     G4LogicalVolume *logicBody;
+    G4LogicalVolume *logicDosi;
 
     G4VPhysicalVolume *physWorld;
     G4VPhysicalVolume *physScintillator;
     G4VPhysicalVolume *physDetector;
     G4VPhysicalVolume *physBody;
+    G4VPhysicalVolume *physDosi;
     
     G4OpticalSurface *mirrorSurface;
     
@@ -56,10 +60,16 @@ private:
     G4double xDet;
     G4double yDet;
     G4double zDet;
+    
+    G4int nDosiX;
+    G4int nDosiY;
+    G4int nDosiZ;
+    G4double rDosi;
 
     G4Material *worldMat;
     G4Material *NaI;
     G4Material *softTissue;
+    G4Material *dosiMat;
 
     G4Element *Na;
     G4Element *I;
