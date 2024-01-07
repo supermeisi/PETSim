@@ -3,6 +3,7 @@
 MyRunAction::MyRunAction()
 {
     G4AnalysisManager *man = G4AnalysisManager::Instance();
+    man->SetVerboseLevel(1);
 
     man->CreateNtuple("Photons", "Photons");
     man->CreateNtupleIColumn("fEvent");
@@ -21,6 +22,8 @@ MyRunAction::MyRunAction()
     man->CreateNtupleDColumn("fZ");
     man->CreateNtupleDColumn("fGlobalTime");
     man->FinishNtuple(1);
+    
+    man->CreateH2("Eabs", "Edep in Dosimeter", 10, -250 * cm, 250 * cm, 10, -250 * cm, 250 * cm);
 }
 
 MyRunAction::~MyRunAction()

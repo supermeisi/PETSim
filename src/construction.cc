@@ -2,6 +2,8 @@
 
 MyDetectorConstruction::MyDetectorConstruction()
 {
+    G4AnalysisManager *man = G4AnalysisManager::Instance();
+       
     xWorld = 250. * cm;
     yWorld = 250. * cm;
     zWorld = 250. * cm;
@@ -24,7 +26,7 @@ MyDetectorConstruction::MyDetectorConstruction()
     nDosiY = 10;
     nDosiZ = 10;
     
-    rDosi = 5 * cm;
+    rDosi = 1 * cm;
 
     DefineMaterials();
 }
@@ -145,6 +147,8 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     // Creating the dosimeters
     solidDosi = new G4Sphere("solidDosi", 0 * cm, rDosi, 0 * deg, 360 * deg, 0 * deg, 180 * deg);
     logicDosi = new G4LogicalVolume(solidDosi, dosiMat, "logicDosi");
+    
+    fScoringVolume = logicScintillator;
     
     G4double dDosiX = 2 * xWorld / nDosiX;
     G4double dDosiY = 2 * yWorld / nDosiY;

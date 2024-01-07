@@ -1,6 +1,8 @@
 #ifndef RUN_HH
 #define RUN_HH
 
+#include "G4SystemOfUnits.hh"
+
 #include "G4UserRunAction.hh"
 #include "G4Run.hh"
 

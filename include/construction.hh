@@ -24,6 +24,8 @@ public:
 
     virtual G4VPhysicalVolume *Construct();
 
+    G4LogicalVolume *GetScoringVolume() const { return fScoringVolume; }
+
 private:
     G4Box *solidWorld;
     G4Box *solidScintillator;
@@ -73,6 +75,8 @@ private:
 
     G4Element *Na;
     G4Element *I;
+    
+    G4LogicalVolume *fScoringVolume;
     
     void DefineMaterials();
     virtual void ConstructSDandField();
