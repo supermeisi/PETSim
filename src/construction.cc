@@ -156,9 +156,9 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         {
             for (G4int k = 0; k < nDosiZ; k++)
             {                
-                G4double posX = -xWorld + i * dDosiX;
-                G4double posY = -yWorld + j * dDosiY;
-                G4double posZ = -zWorld + k * dDosiZ;
+                G4double posX = -xWorld + i * dDosiX + dDosiX / 2;
+                G4double posY = -yWorld + j * dDosiY + dDosiY / 2;
+                G4double posZ = -zWorld + k * dDosiZ + dDosiZ / 2;
                 
                 if(sqrt(pow(posX, 2) + pow(posY, 2) < radius) && fabs(posZ) < 0.5 * bodyLength)
                     continue;
