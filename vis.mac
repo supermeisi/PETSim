@@ -13,4 +13,4 @@
 /vis/set/colour red
 /vis/scene/add/frame   # Simple frame around the view
 /vis/set/lineWidth 2
-
+/vis/scene/endOfEventAction accumulate
