@@ -8,19 +8,19 @@ MyDetectorConstruction::MyDetectorConstruction()
     yWorld = 250. * cm;
     zWorld = 250. * cm;
 
-    length = 20. * cm;
+    length = 60. * cm;
 
     radius = 40 * cm;
 
-    xCryst = 10 * mm;
-    yCryst = 10 * mm;
-    zCryst = 10 * mm;
+    xCryst = 50 * mm;
+    yCryst = 50 * mm;
+    zCryst = 50 * mm;
+
+    gap = 5. * mm;
 
     xDet = 1. * mm;
     yDet = yCryst;
     zDet = zCryst;
-
-    gap = 1. * mm;
     
     nDosiX = 10;
     nDosiY = 10;
@@ -85,7 +85,7 @@ void MyDetectorConstruction::DefineMaterials()
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
     const G4double pi = 3.14159265358979323846;
-    const G4bool checkOverlaps = false;
+    const G4bool checkOverlaps = true;
 
     G4double bodyRadius = 15.0 * cm;
     G4double bodyLength = 170.0 * cm;
